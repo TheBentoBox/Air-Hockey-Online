@@ -1,0 +1,11 @@
+extends ./base.jade
+block append style
+    link(rel="stylesheet", type="text/css", href="/assets/style.css")
+block body
+  h1 Ice Hockey!
+  p Played: #{stats.gamesPlayed}
+  div#canvasContainer
+    canvas(width="1280", height="800")
+block scripts
+        script(src="/socket.io/socket.io.js")
+        script(src="/assets/game.js")

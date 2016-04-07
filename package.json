@@ -1,0 +1,27 @@
+{
+  "name": "air-hockey-online",
+  "version": "1.0.0",
+  "description": "A multi-user air hockey game which stores user statsitics per account.",
+  "main": "./src/app.js",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "test": "echo \"Tests complete\""
+  },
+  "author": "Jake Ben-Tovim",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "compression": "^1.6.1",
+    "connect-redis": "^3.0.2",
+    "cookie-parser": "^1.4.1",
+    "csurf": "^1.8.3",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "helmet": "^1.3.0",
+    "jade": "^1.11.0",
+    "mongoose": "^4.4.11",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.4.5",
+    "underscore": "^1.8.3"
+  }
+}
