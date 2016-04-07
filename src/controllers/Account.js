@@ -110,7 +110,25 @@ var gamePage = function(req, res) {
 			return res.status(400).json({ error: "An error occurred while generating the game page" });
 		}
 		
+		console.log(docs);
 		res.render('game', { csrfToken: req.csrfToken(), stats: docs });
+	});
+};
+
+// Creates the game page
+var accountPage = function(req, res) {
+	
+	// Attempt to return a page which displays the user's account stats
+	Statistics.StatisticsModel.findByOwner(req.session.account._id, function(err, docs) {
+		
+		// catch errors creating the page
+		if (err) {
+			console.log(err);
+			return res.status(400).json({ error: "An error occurred while generating the game page" });
+		}
+		
+		console.log(docs[0]);
+		res.render('account', { csrfToken: req.csrfToken(), stats: docs[0] });
 	});
 };
 
@@ -120,3 +138,4 @@ module.exports.logout = logout;
 module.exports.signupPage = signupPage;
 module.exports.signup = signup;
 module.exports.gamePage = gamePage;
+module.exports.accountPage = accountPage;

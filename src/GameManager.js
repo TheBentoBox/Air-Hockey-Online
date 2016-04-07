@@ -123,7 +123,7 @@ class GameManager {
 			}
 			
 			socket.pos = data.pos;
-			socket.broadcast.to(socket.roomName).emit("updateInfo", { object: "otherUser", pos: data.pos, time: new Date().getTime() });
+			socket.broadcast.to(this.room).emit("updateInfo", { object: "otherUser", pos: data.pos, time: new Date().getTime() });
 		});
 	}
 	

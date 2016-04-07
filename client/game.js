@@ -65,7 +65,7 @@ function connectSocket(e) {
 
 	// Listen for drawImg calls, which are emitted when a new user connects
 	socket.on("msg", function(data) {
-		//serverInfo.innerHTML = data.msg;
+		serverInfo.innerHTML = data.msg;
 	});
 
 	// Listener for user connection event
@@ -187,8 +187,7 @@ function init() {
 	// grab any the other DOM elements we use for displaying server info
 	serverInfo = document.querySelector('#serverInfo');
 	
-	// prepare connect button for making server connection
-	// document.querySelector('#connect').addEventListener('click', connectSocket);
+	// make server connection
 	connectSocket();
 
 	// get canvas mouseover callbacks to update paddle position

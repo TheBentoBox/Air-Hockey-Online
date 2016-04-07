@@ -1,0 +1,14 @@
+extends ./base.jade
+block append style
+    link(rel="stylesheet", type="text/css", href="/assets/style.css")
+block body
+  header
+    h1 Ice Hockey!
+  if !stats
+    h3 No stats tied to your account
+  else
+    p Played: #{stats.gamesPlayed}
+    p Won: #{stats.gamesWon}
+    p Lost: #{stats.gamesLost}
+block scripts
+        script(src="/socket.io/socket.io.js")

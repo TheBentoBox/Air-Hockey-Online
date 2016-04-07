@@ -122,7 +122,7 @@ function createRoom() {
 	
 	// notify users of new game
 	io.sockets.in(name).emit("msg", {msg: "Opponent connected. Starting the game. Drag the gems into yor base to score."});
-	console.log(io.sockets);
+	
 	// create the new game
 	var newGame = new GameManager(name, io, queue[0], queue[1]);
 	games.push(newGame);
