@@ -54,7 +54,7 @@ StatisticsSchema.statics.findByOwner = function(ownerId, callback) {
 		owner: mongoose.Types.ObjectId(ownerId)
 	};
 	
-	return StatisticsModel.find(search).select("createdData gamesPlayed gamesWon gamesLost").exec(callback);
+	return StatisticsModel.findOne(search).select("createdData gamesPlayed gamesWon gamesLost").exec(callback);
 };
 
 // Finds an exact matching statistics object

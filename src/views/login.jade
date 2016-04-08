@@ -1,7 +1,5 @@
 extends ./base.jade
-block append style
-    link(rel="stylesheet", type="text/css", href="/assets/style.css")
-block body
+block content
   nav
     a(href="/login")
       img#logo(src="/assets/img/face.png", alt="face logo")
@@ -22,5 +20,5 @@ block body
     h3
       span#errorMessage Wrong username or password
     img#domo(src="assets/img/domo.png", alt="domo")
-block scripts
+block append scripts
     script(src="/assets/client.js")

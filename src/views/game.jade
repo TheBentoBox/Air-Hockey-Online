@@ -1,12 +1,7 @@
 extends ./base.jade
-block append style
-    link(rel="stylesheet", type="text/css", href="/assets/style.css")
-block body
-  h1 Ice Hockey!
-  p#serverInfo
-  p Played: #{stats.gamesPlayed}
+block content
+  h3#serverInfo Waiting for game to start
   div#canvasContainer
     canvas(width="1280", height="800")
-block scripts
-        script(src="/socket.io/socket.io.js")
+block append scripts
         script(src="/assets/game.js")

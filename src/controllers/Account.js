@@ -31,7 +31,7 @@ var login = function(req, res) {
 		
 		req.session.account = account.toAPI();
 		
-		res.json({redirect: '/game'});
+		res.json({redirect: '/account'});
 	});
 };
 
@@ -110,7 +110,6 @@ var gamePage = function(req, res) {
 			return res.status(400).json({ error: "An error occurred while generating the game page" });
 		}
 		
-		console.log(docs);
 		res.render('game', { csrfToken: req.csrfToken(), stats: docs });
 	});
 };
@@ -127,8 +126,10 @@ var accountPage = function(req, res) {
 			return res.status(400).json({ error: "An error occurred while generating the game page" });
 		}
 		
-		console.log(docs[0]);
-		res.render('account', { csrfToken: req.csrfToken(), stats: docs[0] });
+		// grab the session username and return it with the account stats
+		docs.username = req.session.account.username;
+		
+		res.render('account', { csrfToken: req.csrfToken(), stats: docs });
 	});
 };
 

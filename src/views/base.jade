@@ -1,9 +1,32 @@
 html(lang="en")
-  head
+
+  block head
     meta(charset="utf-8")
     title Air Hockey
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     link(rel="shortcut icon", href="/assets/img/favicon.png")
-    block style
+    link(rel="stylesheet", type="text/css", href='https://fonts.googleapis.com/css?family=Roboto')
+
+  block style
+      link(rel="stylesheet", type="text/css", href="/assets/style.css")
+  
   block body
+    header
+      h1 Ice Hockey!
+    section#navColumn.column
+      ul
+        li
+          a(href="/account") My Account
+        li
+          a(href="/game") Play Game
+        li
+          a(href="/game") Search Users
+      div#chatWindow
+        p Connecting...
+      input#chatInput(type="text", placeholder="Type here to chat")
+
+    block content
+
   block scripts
+    script(src="/socket.io/socket.io.js")
+    script(src="/assets/chat.js")

@@ -134,24 +134,26 @@ function createRoom() {
 // FUNCTION: handle user join
 function onJoin(socket) {
 	socket.on("join", function(data) {
-		// check if username is unique
-		if (users[data.name]) {
-			socket.emit("msg", { msg: data.name + " is already in use. Try another name." });
-			return;
-		}
-		
 		// name socket with username and store in user list and queue
 		socket.name = data.name;
 		users[data.name] = socket;
 		queue.push(socket);
 		
 		// notify user of successful join
-		socket.emit("joined", {msg: "Waiting for an opponent..."});
+		socket.emit("msg", {msg: "Waiting for an opponent..."});
 		
 		// create a new game if 2 or more players are waiting
 		if (queue.length >= 2) {	
 			createRoom();
 		}
+	});
+}
+
+// FUNCTION: handle user chat msg
+function onMessage(socket) {
+	socket.on("chatMsg", function(data) {
+		// notify user of successful join
+		socket.broadcast.emit("msg", data);
 	});
 }
 
@@ -168,6 +170,7 @@ function onDisconnect(socket) {
 io.sockets.on("connection", function(socket) {
 	onJoin(socket);
 	onDisconnect(socket);
+	onMessage(socket);
 });
 
 console.log("Air Hockey server started");
