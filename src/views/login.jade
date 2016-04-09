@@ -1,8 +1,6 @@
 extends ./base.jade
-block content
+block append content
   nav
-    a(href="/login")
-      img#logo(src="/assets/img/face.png", alt="face logo")
     .navlink
       a(href="/login") Login
     .navlink
@@ -15,10 +13,7 @@ block content
       input#pass(type="password", name="pass", placeholder="password")
       input(type="hidden", name="_csrf", value="#{csrfToken}")
       a#loginSubmit(class="formSubmit", href="#") Sign in
-  #domoMessage
-    img#speech(src="/assets/img/speech.png", alt="speech box")
-    h3
-      span#errorMessage Wrong username or password
-    img#domo(src="assets/img/domo.png", alt="domo")
-block append scripts
+  section
+    h2#errorMessage
+block scripts
     script(src="/assets/client.js")

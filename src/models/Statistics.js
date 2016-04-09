@@ -34,7 +34,7 @@ var StatisticsSchema = new mongoose.Schema ({
 		type: Number,
 		min: 0,
 		default: 0
-	},
+	}
 });
 
 // API to return a standard account stats information object

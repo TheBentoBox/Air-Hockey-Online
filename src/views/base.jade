@@ -11,8 +11,6 @@ html(lang="en")
       link(rel="stylesheet", type="text/css", href="/assets/style.css")
   
   block body
-    header
-      h1 Ice Hockey!
     section#navColumn.column
       ul
         li
@@ -22,11 +20,18 @@ html(lang="en")
         li
           a(href="/game") Search Users
       div#chatWindow
-        p Connecting...
+        p You are not logged in.
       input#chatInput(type="text", placeholder="Type here to chat")
 
     block content
+      header
+        h1 Ice Hockey!
 
   block scripts
     script(src="/socket.io/socket.io.js")
     script(src="/assets/chat.js")
+    script(type='text/javascript').
+      var userdata = (!{JSON.stringify({stats})}).stats
+      if ("#{stats.username}" != "undefined")
+        userdata.username = "!{stats.username}"
+      Object.freeze(userdata)

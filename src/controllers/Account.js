@@ -110,6 +110,9 @@ var gamePage = function(req, res) {
 			return res.status(400).json({ error: "An error occurred while generating the game page" });
 		}
 		
+		// grab the session username and return it with the account stats
+		docs.username = req.session.account.username;
+		
 		res.render('game', { csrfToken: req.csrfToken(), stats: docs });
 	});
 };

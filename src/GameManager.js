@@ -73,7 +73,8 @@ class GameManager {
 			"updateInfo",
 			{
 				object: "otherUser",
-				username: this.p2.name
+				username: this.p2.name,
+				time: new Date().getTime()
 			}
 		);
 		this.p1.emit(
@@ -94,7 +95,8 @@ class GameManager {
 			"updateInfo",
 			{
 				object: "otherUser",
-				username: this.p1.name
+				username: this.p1.name,
+				time: new Date().getTime()
 			}
 		);
 		this.p2.emit(

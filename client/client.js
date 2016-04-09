@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     function handleError(message) {
         $("#errorMessage").text(message);
-        $("#domoMessage").animate({width:'toggle'},350);
+        $("#errorMessage").fadeIn();
     }
     
     function sendAjax(action, data) {
@@ -15,7 +15,7 @@ $(document).ready(function() {
             data: data,
             dataType: "json",
             success: function(result, status, xhr) {
-                $("#domoMessage").animate({width:'hide'},350);
+                $("#errorMessage").fadeOut();
 
                 window.location = result.redirect;
             },
@@ -30,8 +30,6 @@ $(document).ready(function() {
     $("#signupSubmit").on("click", function(e) {
         e.preventDefault();
     
-        $("#domoMessage").animate({width:'hide'},350);
-    
         if($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
             handleError("All fields are required");
             return false;
@@ -43,6 +41,7 @@ $(document).ready(function() {
         }
 
         sendAjax($("#signupForm").attr("action"), $("#signupForm").serialize());
+        $("#errorMessage").fadeOut();
         
         return false;
     });
@@ -50,14 +49,13 @@ $(document).ready(function() {
     $("#loginSubmit").on("click", function(e) {
         e.preventDefault();
     
-        $("#domoMessage").animate({width:'hide'},350);
-    
         if($("#user").val() == '' || $("#pass").val() == '') {
             handleError("Username or password is empty");
             return false;
         }
     
         sendAjax($("#loginForm").attr("action"), $("#loginForm").serialize());
+        $("#errorMessage").fadeOut();
 
         return false;
     });

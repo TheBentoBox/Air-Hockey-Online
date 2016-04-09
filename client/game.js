@@ -20,7 +20,7 @@ var side = {		// which side the player will be on - left (0) or right (1)
 	is: 0
 }
 var user = {	// info about the user
-	username: "",
+	username: userdata.username,
 	pos: {
 		x: 0,
 		y: 0
@@ -36,7 +36,7 @@ var otherUser = { // info about the other enemy user
 	},
 	points: 0,
 	img: new Image(),
-	lastTime: new Date().getTime()
+	lastTime: new Date().getTime() - 10
 };
 var puck = { // info about the puck
 	pos: {
@@ -49,7 +49,7 @@ var puck = { // info about the puck
 	},
 	img: new Image(),
 	radius: 25,
-	lastTime: new Date().getTime()
+	lastTime: new Date().getTime() - 10
 };
 
 // Connects to the socket.io server
@@ -71,14 +71,6 @@ function connectSocket(e) {
 	// Listener for user connection event
 	socket.on("connect", function(){
 		console.log("Connecting...");
-		
-		// retrieve the username from the entry field to send to server
-		// user.username = document.querySelector('#username').value;
-		
-		// for invalid entries, generate a random username
-		if (!user.username || user.username === "") {
-			user.username = 'user' + Math.floor(Math.random()*1000000);
-		}
 		
 		socket.emit("join", { name: user.username });
 	});
@@ -229,16 +221,15 @@ function update() {
 	
 	// draw the scores in the corners
 	ctx.save();
+		ctx.textAlign = "center";
 		// draw the scores on the correct side depending on which side we're playing on
 		if (side.is === 0) {
-			ctx.fillText(user.username + ": " + user.points, 5, 25);
-			ctx.textAlign = "end";
-			ctx.fillText(otherUser.points + " :" + otherUser.username, canvas.width - 5, 25);
+			ctx.fillText(user.username + ": " + user.points, canvas.width/4, 25);
+			ctx.fillText(otherUser.username + ": " + otherUser.points, canvas.width*3/4, 25);
 		}
 		else {
-			ctx.fillText(otherUser.username + ": " + otherUser.points, 5, 25);
-			ctx.textAlign = "end";
-			ctx.fillText(user.points + " :" + user.username, canvas.width - 5, 25);
+			ctx.fillText(otherUser.username + ": " + otherUser.points, canvas.width/4, 25);
+			ctx.fillText(user.username + ": " + user.points, canvas.width*3/4, 25);
 		}
 	ctx.restore();
 	
@@ -275,5 +266,5 @@ function bouncePuck() {
 }
 
 
-window.onload = init;
+window.addEventListener("load", init);
 })();

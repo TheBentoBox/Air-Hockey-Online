@@ -87,7 +87,6 @@ var server = http.Server(app);
 var roomNum = 1;
 
 // all connected users
-var users = {};
 var queue = [];
 
 // all running games
@@ -120,9 +119,6 @@ function createRoom() {
 	queue[0].join(name);
 	queue[1].join(name);
 	
-	// notify users of new game
-	io.sockets.in(name).emit("msg", {msg: "Opponent connected. Starting the game. Drag the gems into yor base to score."});
-	
 	// create the new game
 	var newGame = new GameManager(name, io, queue[0], queue[1]);
 	games.push(newGame);
@@ -136,7 +132,6 @@ function onJoin(socket) {
 	socket.on("join", function(data) {
 		// name socket with username and store in user list and queue
 		socket.name = data.name;
-		users[data.name] = socket;
 		queue.push(socket);
 		
 		// notify user of successful join
@@ -161,7 +156,6 @@ function onMessage(socket) {
 function onDisconnect(socket) {
 	socket.on("disconnect", function(data) {
 		// delete user
-		delete users[socket.name];
 		delete queue[socket.name];
 	});
 }
