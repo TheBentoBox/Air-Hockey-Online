@@ -14,6 +14,14 @@ block append content
       p.userStats #[strong % Wins]: #[span.statistic#pctWin]
       p.userStats #[strong % Losses]: #[span.statistic#pctLoss]
       p.userStats #[strong Win-Loss Ratio]: #[span.statistic#winLossRatio]
+
+      div#renamePlayer
+          p Update your username:
+          form#renameForm(name="renameForm", action="/renamePlayer", method="POST")
+              label(for="name") New Name
+              input#newName(type="text", name="name", placeholder="#{stats.username}")
+              input(type="hidden", name="_csrf", value="#{csrfToken}")
+              a#renameSubmit(href="#") Submit
   
 block append scripts
   script(src="/assets/accountStats.js")

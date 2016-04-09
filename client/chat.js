@@ -1,4 +1,4 @@
-function connectChat(e) {
+function connectChat() {
 	// grab references to page chat elements
 	var chatWindow = document.querySelector('#chatWindow');
 	var chatInput = document.querySelector('#chatInput');
@@ -6,12 +6,13 @@ function connectChat(e) {
 	
 	// connect to socket.io
 	// the io variable is from the socket.io script and is global
-	var socket = socket || io.connect();
+	socket = (socket || io.connect());
+	socket.emit("userdata", userdata);
 	
 	// update chat window on connect
 	socket.on('connect', function(data) {
 		
-		chatWindow.innerHTML = "Connected to chat!"
+		chatWindow.innerHTML = "<p><strong>Server</strong>: Connected to chat!</p>"
 	});
 	
 	// listener for msg event

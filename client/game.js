@@ -15,7 +15,6 @@ var serverInfo;
 var notification;
 
 // Game variables
-var socket; // the user's socket
 var side = {		// which side the player will be on - left (0) or right (1)
 	is: 0
 }
@@ -58,21 +57,18 @@ function connectSocket(e) {
 
 	// Connect to socket.io
 	// The io variable is a global var from the socket.io script above
-	socket = io.connect();
+	socket = (socket || io.connect());
+	socket.emit("userdata", userdata);
 	
 	// emit our starting positipon
 	socket.emit("update", {pos: user.pos})
-
-	// Listen for drawImg calls, which are emitted when a new user connects
-	socket.on("msg", function(data) {
-		serverInfo.innerHTML = data.msg;
-	});
 
 	// Listener for user connection event
 	socket.on("connect", function(){
 		console.log("Connecting...");
 		
-		socket.emit("join", { name: user.username });
+		socket.emit("join", userdata);
+		socket.emit("sendId", { id: userdata._id });
 	});
 	
 	// Listen for update data sent from the GameManager
@@ -156,6 +152,18 @@ function connectSocket(e) {
 		}
 	});
 	
+	// Listen for game completion events, which let us know the game
+	// is over and whether we won or lost. Updates statistics.
+	socket.on("gameComplete", function(data) {
+		data._csrf = $("#token").val();
+		sendAjax("/updateStats", data);
+	});
+	
+	// Listen for messages from game manager
+	socket.on("gameMsg", function(data) {
+		document.querySelector("#serverInfo").innerHTML = data.msg;
+	});
+	
 	// Listen for the server telling us to begin the game
 	socket.on("beginPlay", update);
 }
@@ -234,7 +242,7 @@ function update() {
 	ctx.restore();
 	
 	// emit our position to the other user
-	socket.emit("update", {pos: user.pos})
+	socket.emit("update", { pos: user.pos })
 	
 	// draw the current notification from the server
 	if (notification != "") {
@@ -265,6 +273,15 @@ function bouncePuck() {
 	}
 }
 
+/* removeFromQueue
+	Emits a notification to the server to remove the player from the
+	waiting queue should they navigate away from the page
+*/
+function removeFromQueue() {
+	socket.emit("removeFromQueue", {});
+}
+
 
 window.addEventListener("load", init);
+window.addEventListener("unload", removeFromQueue);
 })();

@@ -1,30 +1,28 @@
 "use strict";
 
 $(document).ready(function() {
+	
+	function sendAjax(action, data) {
+		$.ajax({
+			cache: false,
+			type: "POST",
+			url: action,
+			data: data,
+			dataType: "json",
+			success: function(result, status, xhr) {
+				window.location = result.redirect;
+			},
+			error: function(xhr, status, error) {
+				var messageObj = JSON.parse(xhr.responseText);
+			
+				handleError(messageObj.error);
+			}
+		});        
+	}
 
     function handleError(message) {
         $("#errorMessage").text(message);
         $("#errorMessage").fadeIn();
-    }
-    
-    function sendAjax(action, data) {
-        $.ajax({
-            cache: false,
-            type: "POST",
-            url: action,
-            data: data,
-            dataType: "json",
-            success: function(result, status, xhr) {
-                $("#errorMessage").fadeOut();
-
-                window.location = result.redirect;
-            },
-            error: function(xhr, status, error) {
-                var messageObj = JSON.parse(xhr.responseText);
-            
-                handleError(messageObj.error);
-            }
-        });        
     }
     
     $("#signupSubmit").on("click", function(e) {

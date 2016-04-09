@@ -67,18 +67,19 @@ header {
 	margin-top: 5px;
 	border-radius: 1em;
 	word-wrap: break-word;
+	background-color: white;
 }
 #chatInput {
 	width: 100%;
 	height: calc(20% - 30px);
 }
-.userMsg {
+#chatWindow p.userMsg {
 	text-align: right;
-	background-color: rgb(30, 75, 150);
+	background-color: rgb(150, 75, 75);
 	color: white;
 }
-.otherUserMsg {
-	background-color: rgb(150, 75, 75);
+#chatWindow p.otherUserMsg {
+	background-color: rgb(30, 75, 150);
 	color: white;
 }
 a {
@@ -94,8 +95,14 @@ a:hover {
 
 
 /* LOGIN/SIGNUP FORMS */
-#login, #signup, #errorMessage, nav {
+#login, #signup, #search, #errorMessage, nav {
 	text-align: center;
+}
+#search {
+	margin-top: 50px;
+}
+#search h3 {
+	margin-bottom: 20px;
 }
 .navlink {
 	display: inline;
@@ -104,14 +111,14 @@ a:hover {
 nav {
 	margin: 200px 0 15px 0;
 }
-#login input[type="text"], #login input[type="password"], #signup input[type="text"], #signup input[type="password"] {
+input {
 	margin-right: 15px;
 	height: 21px;
 	position: relative;
 	top: -1px;
 }
-#loginForm label {
-	padding-left: 5px;
+label {
+	padding: 0 5px;
 	border: 1px solid rgb(170, 170, 170);
 	border-right: none;
 	background-color: rgb(250, 250, 250);
@@ -151,6 +158,12 @@ nav {
 span.statistic {
 	float: right;
 }
+#renamePlayer {
+	margin-top: 20px;
+}
+#renamePlayer p {
+	margin-bottom: 10px;
+}
 
 
 
@@ -168,4 +181,26 @@ canvas {
 	position: relative;
 	top: 25px;
 	text-align: center;
+}
+
+
+
+/* ONLINE USERS LIST PAGE */
+#onlineUsersContainer {
+	margin-left: 20%;
+	padding: 20px;
+}
+#onlineUsersContainer h2 {
+	margin-bottom: 15px;
+}
+#onlineUsersList {
+	width: 100%;
+}
+#onlineUsersList li {
+	list-style: none;
+	padding: 10px;
+	background-color: rgb(240, 240, 240);
+}
+#onlineUsersList li:nth-child(odd) {
+	background-color: rgb(230, 230, 230);
 }

@@ -52,6 +52,10 @@ class GameManager {
 		this.onUpdate(p1);
 		this.onUpdate(p2);
 		
+		// set up listeners for when sockets send us their account IDs
+		this.onReceiveID(p1);
+		this.onReceiveID(p2);
+		
 		// set users to their starting positions
 		this.p1.pos = {
 			x: this.gW * 0.75,
@@ -78,7 +82,7 @@ class GameManager {
 			}
 		);
 		this.p1.emit(
-			"msg",
+			"gameMsg",
 			{
 				msg: "Match started, you're playing against " + this.p2.name + "."
 			}
@@ -100,7 +104,7 @@ class GameManager {
 			}
 		);
 		this.p2.emit(
-			"msg",
+			"gameMsg",
 			{
 				msg: "Match started, you're playing against " + this.p1.name + "."
 			}
@@ -126,6 +130,14 @@ class GameManager {
 			
 			socket.pos = data.pos;
 			socket.broadcast.to(this.room).emit("updateInfo", { object: "otherUser", pos: data.pos, time: new Date().getTime() });
+		});
+	}
+	
+	// Listen for user sending their account ID to the server
+	// Used after the game to update statistics
+	onReceiveID(socket) {
+		socket.on("sendId", function(data) {
+			socket.accountId = data.id;
 		});
 	}
 	
@@ -327,16 +339,19 @@ class GameManager {
 			
 			// check which side scored based on the puck's x position
 			var side;
+			var scorerName;
 			
 			// puck is on the left, player 1 got the point
 			if (this.puck.pos.x < 0) {
 				side = 0;
-				++this.p1.score;
+				scorerName = this.p2.name;
+				++this.p2.score;
 			}
 			// on the right, player 2 got the point
 			else {
 				side = 1;
-				++this.p2.score;
+				scorerName = this.p1.name;
+				++this.p1.score;
 			}
 			
 			// deactivate physics
@@ -344,6 +359,7 @@ class GameManager {
 			
 			// emit the score message containing which side scored
 			this.io.sockets.in(this.room).emit("scorePoint", {side: side});
+			this.io.sockets.in(this.room).emit("gameMsg", {msg: scorerName + " scored a point"});
 			
 			// move the puck back to the center with 0 velocity
 			this.puck.vel = { x: 0, y: 0 };
@@ -359,6 +375,7 @@ class GameManager {
 			// if either player's score is >= 10, they've won
 			if (this.p1.score >= 10 || this.p2.score >= 10) {
 				this.notifyUsers("Game Complete", -1);
+				this.updateUserStatistics();
 				this.gameComplete = true;
 			}
 			// nobody has won, continue
@@ -386,6 +403,36 @@ class GameManager {
 		if ((this.puck.pos.y - this.puck.radius < 0) || (this.puck.pos.y + this.puck.radius > this.gH)) {
 			this.puck.vel.y *= -1;
 		}
+	}
+	
+	/* updateUserStatistics
+		desc: called when the game is completed, finds user statistics objects on the sever and
+				updates them with results from the game
+	*/
+	updateUserStatistics() {
+		// Check who the winner was
+		if (this.p1.score >= 10) {
+			var winner = this.p1;
+			var loser = this.p2;
+		}
+		else {
+			winner = this.p2;
+			loser = this.p1;
+		}
+		
+		
+		winner.emit(
+			"gameComplete",
+			{
+				status: "won"
+			}
+		);
+		loser.emit(
+			"gameComplete",
+			{
+				status: "lost"
+			}
+		);
 	}
 			
 	// A helper function used mainly for the puck

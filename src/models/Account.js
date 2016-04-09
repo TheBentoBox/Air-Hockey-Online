@@ -69,6 +69,11 @@ AccountSchema.statics.findById = function(_id, callback) {
     return AccountModel.findOne(search, callback);
 };
 
+AccountSchema.statics.findAll = function(callback) {
+
+    return AccountModel.find();
+};
+
 AccountSchema.statics.generateHash = function(password, callback) {
 	var salt = crypto.randomBytes(saltLength);
 	

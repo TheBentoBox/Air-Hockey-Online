@@ -18,20 +18,22 @@ html(lang="en")
         li
           a(href="/game") Play Game
         li
-          a(href="/game") Search Users
+          a(href="/usersOnline") Online Users
       div#chatWindow
         p You are not logged in.
       input#chatInput(type="text", placeholder="Type here to chat")
 
     block content
       header
-        h1 Ice Hockey!
+        h1 Air Hockey!
 
   block scripts
-    script(src="/socket.io/socket.io.js")
     script(src="/assets/chat.js")
+    script(src="/assets/sendAjax.js")
+    script(src="/socket.io/socket.io.js")
     script(type='text/javascript').
       var userdata = (!{JSON.stringify({stats})}).stats
       if ("#{stats.username}" != "undefined")
         userdata.username = "!{stats.username}"
       Object.freeze(userdata)
+      var socket;

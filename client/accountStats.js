@@ -27,6 +27,19 @@ function fillStats() {
 	pctWinSpan.innerHTML = pctWins;
 	pctLossSpan.innerHTML = pctLost;
 	winLossRatioSpan.innerHTML = winLossRatio;
+	
+	// hook up name change submission button
+    document.querySelector('#renameSubmit').addEventListener("click", function(e) {
+        e.preventDefault();
+		var newName = document.querySelector("#newName").value;
+		
+        if (newName == '') {
+            return false;
+        }
+    
+        sendAjax($("#renameForm").attr("action"), $("#renameForm").serialize());
+        return false;
+    });
 }
 
 window.addEventListener("load", fillStats);

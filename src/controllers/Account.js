@@ -117,7 +117,7 @@ var gamePage = function(req, res) {
 	});
 };
 
-// Creates the game page
+// Creates the user's account page
 var accountPage = function(req, res) {
 	
 	// Attempt to return a page which displays the user's account stats
@@ -136,10 +136,59 @@ var accountPage = function(req, res) {
 	});
 };
 
+var onlinePage = function(req, res) {
+	
+	// Attempt to return a page which displays the user's account stats
+	Statistics.StatisticsModel.findByOwner(req.session.account._id, function(err, docs) {
+		
+		// catch errors creating the page
+		if (err) {
+			console.log(err);
+			return res.status(400).json({ error: "An error occurred while generating the user list page" });
+		}
+		
+		// grab the session username and return it with the account stats
+		docs.username = req.session.account.username;
+		
+		res.render('usersOnline', { csrfToken: req.csrfToken(), stats: docs });
+	});
+};
+
+// when players request a new username
+var renamePlayer = function(req, res) {
+	
+	// Looks for the player's account based on the current session
+	Account.AccountModel.findById(req.session.account._id, function(err, docs) {
+		// catch errors
+		if (err) {
+			console.log(err);
+            return res.json({ err: err });          
+        }
+
+		// update player name to name in database
+		docs.username = req.body.name;
+		
+		// push changes to database
+		docs.save(function(err) {
+			if (err) {
+				console.log(err);
+				return res.status(400).json({ error: "An error occurred while renaming a user account" });
+			}
+			
+			req.session.account.username = docs.username;
+		
+			// reload their account page to reflect the changes
+			res.json({ redirect: '/account' });
+		});
+	});
+};
+
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signupPage = signupPage;
 module.exports.signup = signup;
+module.exports.onlinePage = onlinePage;
 module.exports.gamePage = gamePage;
 module.exports.accountPage = accountPage;
+module.exports.renamePlayer = renamePlayer;

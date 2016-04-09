@@ -130,16 +130,34 @@ function createRoom() {
 // FUNCTION: handle user join
 function onJoin(socket) {
 	socket.on("join", function(data) {
-		// name socket with username and store in user list and queue
-		socket.name = data.name;
-		queue.push(socket);
 		
-		// notify user of successful join
-		socket.emit("msg", {msg: "Waiting for an opponent..."});
+		// check if a socket with this user ID already exists
+		var index = -1;
+		for (var i = 0; i < queue.length; ++i) {
+			if (queue[i].userID === data._id) {
+				index = i;
+				break;
+			}
+		}
 		
-		// create a new game if 2 or more players are waiting
-		if (queue.length >= 2) {	
-			createRoom();
+		// don't let people join the queue twice w/multiple tabs 
+		if (index == -1) {
+			// name socket with username and store in user list and queue
+			socket.name = data.username;
+			socket.userID = data._id;
+			queue.push(socket);
+			
+			// notify user of successful join
+			socket.emit("gameMsg", {msg: "Waiting for an opponent..."});
+			
+			// create a new game if 2 or more players are waiting
+			if (queue.length >= 2) {	
+				createRoom();
+			}
+		}
+		else {
+			// notify user of failed join
+			socket.emit("gameMsg", {msg: "You are already in the user queue."});
 		}
 	});
 }
@@ -147,8 +165,25 @@ function onJoin(socket) {
 // FUNCTION: handle user chat msg
 function onMessage(socket) {
 	socket.on("chatMsg", function(data) {
-		// notify user of successful join
 		socket.broadcast.emit("msg", data);
+	});
+}
+
+// FUNCTION: handle user data request
+function onUsersRequest(socket) {
+	socket.on("requestUsers", function(data) {
+		var connectedSockets = io.sockets.sockets;
+		var keys = Object.keys(connectedSockets);
+		
+		var onlineUsers = [];
+		
+		for (var i = 0; i < keys.length; ++i) {
+			var currentSocket = connectedSockets[keys[i]];
+			
+			onlineUsers.push(currentSocket.userdata);
+		}
+		
+		socket.emit("userlist", { users: onlineUsers });
 	});
 }
 
@@ -160,11 +195,33 @@ function onDisconnect(socket) {
 	});
 }
 
+// FUNCTION: handle user disconnect
+function onUnload(socket) {
+	socket.on("removeFromQueue", function(data) {
+		var index = queue.indexOf(socket);
+		
+		// delete user
+		if (index != -1) {
+			queue.splice(index, 1);
+		}
+	});
+}
+
+// FUNCTION: listen for users sending userdata
+function onUserdata(socket) {
+	socket.on("userdata", function(data) {
+		socket.userdata = data;
+	});
+}
+
 // send new connections to handlers
 io.sockets.on("connection", function(socket) {
 	onJoin(socket);
+	onUsersRequest(socket);
 	onDisconnect(socket);
 	onMessage(socket);
+	onUnload(socket);
+	onUserdata(socket);
 });
 
 console.log("Air Hockey server started");
