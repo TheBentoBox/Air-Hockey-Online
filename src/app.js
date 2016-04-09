@@ -172,14 +172,15 @@ function onMessage(socket) {
 // FUNCTION: handle user data request
 function onUsersRequest(socket) {
 	socket.on("requestUsers", function(data) {
+		// get all sockets
 		var connectedSockets = io.sockets.sockets;
 		var keys = Object.keys(connectedSockets);
 		
 		var onlineUsers = [];
 		
+		// get userdata objects from online sockets
 		for (var i = 0; i < keys.length; ++i) {
 			var currentSocket = connectedSockets[keys[i]];
-			
 			onlineUsers.push(currentSocket.userdata);
 		}
 		

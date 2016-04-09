@@ -411,9 +411,11 @@ class GameManager {
 	*/
 	updateUserStatistics() {
 		// Check who the winner was
+		var winner, loser;
+		
 		if (this.p1.score >= 10) {
-			var winner = this.p1;
-			var loser = this.p2;
+			winner = this.p1;
+			loser = this.p2;
 		}
 		else {
 			winner = this.p2;
